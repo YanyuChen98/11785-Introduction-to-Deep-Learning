@@ -1,0 +1,48 @@
+import os
+import copy
+import csv
+import numpy as np
+import torch
+import torch.nn as nn
+from torch.utils.data import Dataset, DataLoader
+from sklearn.utils import shuffle, check_random_state
+
+device = torch.device('cuda')
+os.environ['data_path'] = 'D:/Heinz/Deep Learning/HW1/hw1p2_student_data'
+
+
+class data():
+    def __init__(self):
+        self.dev_set = None
+        self.train_set = None
+        self.test_set = None
+
+    @property
+    def dev(self):
+        if self.dev_set is None:
+            self.dev_set = load_raw(os.environ['data_path'], 'dev-clean')
+
+    @property
+    def train(self):
+        if self.train_set is None:
+            self.train_set = load_raw(os.environ['data_path'], 'train-clean')
+        return self.train_set
+
+    @property
+    def test(self):
+        if self.test_set is None:
+            self.test_set = load_raw(os.environ['data_path'], 'test-clean')
+        return self.test_set
+
+
+def load_raw(path, name):
+    return (
+        np.load(os.path.join(path, '{}.npy'.format(name)), encoding='bytes'),
+        np.load(os.path.join(path, '{}_labels.npy'.format(name)), encoding='bytes')
+    )
+
+
+
+class net(nn.Module):
+    def __init__(self):
+        super(net, self).init()
