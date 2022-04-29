@@ -1,0 +1,63 @@
+import numpy as np
+from activation import *
+import math
+
+W_3 = np.array([
+    [0.05, 0.05, 0.0, 0.15, 0.25, 0.0, 1.0, 0, 0],
+    [0.2, -0.01, 0.07, 0.2, -0.1, 0.7, 0.0, 1, 0],
+    [-0.2, 0.05, 0.05, -0.2, 0.65, 0.15, 0, 0, 1]
+])
+
+W_c = np.array([
+    [0.7, 0.8, 0.9, 1, 0, 0],
+    [0.9, 0.8, 0.9, 0, 1, 0],
+    [-0.9, 0.8, 0.9, 0, 0, 1]
+])
+
+inp = np.array([1, 1, 1])
+
+ht = np.zeros(3)
+
+Ct = np.zeros(3)
+
+print()
+
+for i in range(1000):
+    cont = np.concatenate((Ct, ht, inp))
+    cont_part = np.concatenate((ht, inp))
+    ft = Sigmoid().forward(np.dot(W_3, cont))
+    it = Sigmoid().forward(np.dot(W_3, cont))
+    Ct_hat = Tanh().forward(np.dot(W_c, cont_part))
+    Ct = ft * Ct + it * Ct_hat
+    ot = Sigmoid().forward(np.dot(W_3, np.concatenate((Ct, ht, inp))))
+    ht = ot * np.tanh(Ct)
+    inp = np.array([0,0,0])
+    if i > 998:
+       print(np.linalg.norm(Ct))
+
+# W_z = np.array([
+#     [0.1, 0.2, 0.3, 0.1, 0.5],
+#     [0.6, 0.5, 0.4, 0.4, 1]
+# ])
+#
+# W_r = np.array([
+#     [0.1, 0.2, 0.3, 0.1, 0.9],
+#     [0.6, 0.5, 0.4, 0.4, 1]])
+#
+# W = np.array([
+#     [0.1, 0.2, 0.3, 0.1, 0.9],
+#     [0.6, 0.5, 0.4, 0.8, 1]])
+#
+# inp = np.array([-1, -1, -1])
+#
+# ht = np.array([0, 0])
+#
+# for i in range(11):
+#     zt = Sigmoid().forward(np.dot(W_z, np.concatenate((ht, inp))))
+#     rt = Sigmoid().forward(np.dot(W_r, np.concatenate((ht, inp))))
+#     ht_hat = np.tanh(np.dot(W,np.concatenate((rt * ht, inp))))
+#     ht = (1-zt)*ht + zt*ht_hat
+#     inp = np.zeros(3)
+#     print(math.sqrt((ht[0]**2+ht[1]**2)))
+
+
